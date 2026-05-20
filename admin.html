@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 16px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .admin-product-item {
+            background: white;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .delete-btn { background: #e74c3c; width: auto; padding: 6px 12px; }
+        .edit-btn { background: #f39c12; width: auto; padding: 6px 12px; }
+        .logout-btn { background: #7f8c8d; margin-top: 20px; width: auto; padding: 10px 20px; }
+        .seller-list { background: white; border-radius: 16px; padding: 15px; margin: 15px 0; }
+        .seller-item { padding: 8px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div id="adminContent">
+        <nav>
+            <a href="index.html">🏠 Home</a>
+            <a href="dashboard.html">📦 Seller</a>
+            <a href="admin.html">🛠️ Admin</a>
+        </nav>
+        <h1>🛡️ Admin Dashboard</h1>
+        <button class="logout-btn" onclick="logoutAdmin()">🚪 Logout</button>
+        <div class="warning-note" style="background:#fff3cd; padding:10px; border-radius:12px; margin:15px 0;">
+            ⚠️ You have full control – you can edit or delete any product.
+        </div>
+
+        <div class="admin-stats" id="stats"></div>
+
+        <h2>📋 All Products (Manage)</h2>
+        <div id="allProductsList"></div>
+
+        <h2>👥 Registered Sellers (users with listings)</h2>
+        <div class="seller-list" id="sellerList"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check if admin is logged in
+        if (localStorage.getItem("adminLoggedIn") !== "true") {
+            window.location.href = "admin-login.html";
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem("adminLoggedIn");
+            window.location.href = "admin-login.html";
+        }
+
+        // Override displayAllProductsForAdmin to add edit buttons
+        window.displayAllProductsForAdmin = function() {
+            const container = document.getElementById("allProductsList");
+            if (!container) return;
+            if (products.length === 0) {
+                container.innerHTML = "<p>No products in the marketplace.</p>";
+                return;
+            }
+            container.innerHTML = "";
+            products.forEach(product => {
+                const div = document.createElement("div");
+                div.className = "admin-product-item";
+                div.innerHTML = `
+                    <div>
+                        <strong>${escapeHtml(product.title)}</strong> - R${product.price.toFixed(2)}<br>
+                        <small>Seller: ${escapeHtml(product.sellerName)} (ID: ${product.sellerId})</small>
+                        <br><small>${escapeHtml(product.description.substring(0, 80))}...</small>
+                    </div>
+                    <div>
+                        <button class="edit-btn" onclick="editProduct(${product.id})">✏️ Edit</button>
+                        <button class="delete-btn" onclick="adminDeleteProduct(${product.id})">🗑️ Delete</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        };
+
+        // Function to edit product (prompts for new values)
+        window.editProduct = function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            const newTitle = prompt("Edit title:", product.title);
+            if (newTitle !== null) product.title = newTitle;
+            const newPrice = parseFloat(prompt("Edit price (R):", product.price));
+            if (!isNaN(newPrice)) product.price = newPrice;
+            const newDesc = prompt("Edit description:", product.description);
+            if (newDesc !== null) product.description = newDesc;
+            const newImage = prompt("Edit image URL (or leave blank):", product.image);
+            if (newImage !== null) product.image = newImage || "https://placehold.co/400x300?text=Item";
+            saveProducts();
+            displayAllProductsForAdmin();
+            displayAdminStats();  // refresh stats
+            displayProductGrid(); // update home page if open
+            alert("Product updated!");
+        };
+
+        // Display seller list (unique sellers from products)
+        function displaySellerList() {
+            const container = document.getElementById("sellerList");
+            if (!container) return;
+            const sellerMap = new Map();
+            products.forEach(p => {
+                sellerMap.set(p.sellerId, { name: p.sellerName, id: p.sellerId, productCount: (sellerMap.get(p.sellerId)?.productCount || 0) + 1 });
+            });
+            if (sellerMap.size === 0) {
+                container.innerHTML = "<p>No sellers yet.</p>";
+                return;
+            }
+            container.innerHTML = "";
+            for (let [id, seller] of sellerMap.entries()) {
+                const div = document.createElement("div");
+                div.className = "seller-item";
+                div.innerHTML = `<strong>${escapeHtml(seller.name)}</strong> (ID: ${id}) - ${seller.productCount} product(s)`;
+                container.appendChild(div);
+            }
+        }
+
+        // Override displayAdminStats to also include sales (demo)
+        window.displayAdminStats = function() {
+            const statsDiv = document.getElementById("stats");
+            if (!statsDiv) return;
+            const totalProducts = products.length;
+            const uniqueSellers = new Set(products.map(p => p.sellerId)).size;
+            // Simulated total sales (just for demo)
+            const totalSalesValue = products.reduce((sum, p) => sum + p.price, 0) * 0.3;
+            statsDiv.innerHTML = `
+                <div class="stat-card"><div class="stat-number">${totalProducts}</div><div>Total Listings</div></div>
+                <div class="stat-card"><div class="stat-number">${uniqueSellers}</div><div>Active Sellers</div></div>
+                <div class="stat-card"><div class="stat-number">R${totalSalesValue.toFixed(0)}</div><div>Est. Sales (demo)</div></div>
+            `;
+        };
+
+        // Re-run admin functions on page load
+        window.onload = function() {
+            loadProducts();
+            displayAllProductsForAdmin();
+            displayAdminStats();
+            displaySellerList();
+        };
+    </script>
+</body>
+</html>

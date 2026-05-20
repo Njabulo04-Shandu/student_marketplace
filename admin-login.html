@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-container {
+            max-width: 350px;
+            margin: 80px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        input {
+            margin: 12px 0;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>🔐 Admin Login</h2>
+        <p>Only the app owner can access this page.</p>
+        <input type="email" id="adminEmail" placeholder="Email" autocomplete="off">
+        <input type="password" id="adminPassword" placeholder="Password">
+        <button onclick="loginAdmin()">Login</button>
+        <p style="margin-top: 20px;"><a href="index.html">← Back to home</a></p>
+    </div>
+    <script>
+        function loginAdmin() {
+            const email = document.getElementById("adminEmail").value;
+            const pwd = document.getElementById("adminPassword").value;
+            // CHANGE THESE to your own secret credentials
+            const correctEmail = "admin@studentmarket.com";
+            const correctPassword = "admin123";
+            if (email === correctEmail && pwd === correctPassword) {
+                localStorage.setItem("adminLoggedIn", "true");
+                window.location.href = "admin.html";
+            } else {
+                alert("Wrong email or password. Access denied.");
+            }
+        }
+    </script>
+</body>
+</html>

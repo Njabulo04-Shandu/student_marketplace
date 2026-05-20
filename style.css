@@ -1,0 +1,193 @@
+/* RESET & BASE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f7f9fc;
+    padding: 16px;
+    padding-bottom: 40px;
+    color: #1e2a3a;
+}
+
+/* TYPOGRAPHY */
+h1 {
+    font-size: 26px;
+    margin: 16px 0 8px;
+    text-align: center;
+}
+h2 {
+    font-size: 20px;
+    margin: 20px 0 12px;
+    border-left: 4px solid #2c3e50;
+    padding-left: 12px;
+}
+
+/* NAVIGATION (mobile friendly row wrap) */
+nav {
+    background: #2c3e50;
+    margin: -16px -16px 20px -16px;
+    padding: 12px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 0;
+    font-size: 16px;
+    opacity: 0.9;
+}
+nav a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* PRODUCT GRID – 2 columns on mobile */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+}
+@media (min-width: 600px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (min-width: 900px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* PRODUCT CARD */
+.product-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.1s ease;
+    cursor: pointer;
+}
+.product-card:active {
+    transform: scale(0.98);
+}
+.product-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background: #eee;
+}
+.product-card h3 {
+    font-size: 15px;
+    margin: 10px 12px 4px;
+    font-weight: 600;
+}
+.price {
+    color: #e67e22;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 12px 12px;
+}
+
+/* FORMS & INPUTS */
+input, textarea, button {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 14px;
+    font-size: 16px;
+    font-family: inherit;
+}
+button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+button:hover {
+    background: #1e2f3d;
+}
+textarea {
+    resize: vertical;
+}
+
+/* CARDS FOR DASHBOARD */
+.card {
+    background: white;
+    border-radius: 24px;
+    padding: 18px;
+    margin: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+
+/* SELLER INFO BADGE */
+.seller-info {
+    background: #e8f0fe;
+    padding: 12px 18px;
+    border-radius: 40px;
+    margin: 10px 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* PRODUCT DETAIL PAGE */
+.product-detail-container {
+    background: white;
+    border-radius: 28px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+.product-detail-container img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+.contact-btn {
+    background: #27ae60;
+    margin-top: 20px;
+    font-size: 18px;
+}
+.contact-btn:hover {
+    background: #219653;
+}
+
+/* MY PRODUCTS LIST (dashboard) */
+#myProductsList .product-card {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    cursor: default;
+}
+#myProductsList .product-card button {
+    width: auto;
+    background: #e74c3c;
+    padding: 6px 12px;
+    margin: 0;
+}
+/* Admin specific */
+.admin-product-item {
+    background: white;
+    margin: 10px 0;
+    padding: 14px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
