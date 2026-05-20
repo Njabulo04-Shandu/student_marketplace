@@ -2,38 +2,46 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Seller Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell - Student Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav>
-        <a href="index.html">🏠 Home</a>
-        <a href="dashboard.html">📦 Seller</a>
-        <a href="admin.html">🛠️ Admin</a>
-        <a href="#" id="fakeLoginLink">👤 Login (demo)</a>
+        <div class="logo">
+            <span class="cut">C.U.T.</span>
+            <span class="marketplace">Student Marketplace</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Sell</a>
+            <a href="inbox.html">Inbox</a>
+            <a href="#" id="authLink">Login</a>
+        </div>
     </nav>
-    <h1>📝 Seller Dashboard</h1>
-    <div class="seller-info" id="sellerInfo">
-        <!-- Current seller info will appear here -->
-    </div>
+    <div class="container">
+        <h1>Seller Dashboard</h1>
+        <div id="userInfo"></div>
+        
+        <div class="card">
+            <h2>Add New Product</h2>
+            <form id="addProductForm">
+                <input type="text" id="productTitle" placeholder="Title" required>
+                <input type="number" id="productPrice" placeholder="Price (e.g., 150)" step="0.01" required>
+                <textarea id="productDesc" placeholder="Description" rows="3"></textarea>
+                <input type="file" id="productImage" accept="image/*">
+                <button type="submit">Add Product</button>
+            </form>
+        </div>
 
-    <div class="card">
-        <h2>➕ Add New Product</h2>
-        <form id="addProductForm">
-            <input type="text" id="productTitle" placeholder="Title (e.g., Calculus Textbook)" required>
-            <input type="number" id="productPrice" placeholder="Price in Rands (e.g. 150)" step="0.01" required>
-            <textarea id="productDesc" placeholder="Description (condition, pickup location, etc.)" rows="3"></textarea>
-            <input type="text" id="productImage" placeholder="Image URL (or leave blank for placeholder)">
-            <button type="submit">✨ Add Product</button>
-        </form>
+        <div class="card">
+            <h2>My Products</h2>
+            <div id="myProductsList"></div>
+        </div>
     </div>
-
-    <div class="card">
-        <h2>📦 My Products</h2>
-        <div id="myProductsList"></div>
-    </div>
-
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

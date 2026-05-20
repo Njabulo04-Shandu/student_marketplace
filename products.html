@@ -2,20 +2,32 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Product Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Student Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <nav>
-        <a href="index.html">🏠 Home</a>
-        <a href="dashboard.html">📦 Seller</a>
-        <a href="admin.html">🛠️ Admin</a>
-        <a href="#" id="fakeLoginLink">👤 Login (demo)</a>
+        <div class="logo">
+            <span class="cut">C.U.T.</span>
+            <span class="marketplace">Student Marketplace</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="dashboard.html">Sell</a>
+            <a href="inbox.html">Inbox</a>
+            <a href="#" id="authLink">Login</a>
+        </div>
     </nav>
-    <div id="productDetail" class="product-detail-container">
-        <!-- Dynamic content -->
+    <div class="container" id="productDetail"></div>
+    <div class="card" id="messageBox" style="display:none;">
+        <h3>Message Seller</h3>
+        <textarea id="messageText" rows="2" placeholder="Ask about this product..."></textarea>
+        <button id="sendMsgBtn">Send Message</button>
     </div>
+    <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

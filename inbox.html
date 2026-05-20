@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Marketplace | CUT</title>
+    <title>Inbox - Student Marketplace</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,21 +20,17 @@
         </div>
     </nav>
     <div class="container">
-        <h1>Welcome to the Student Marketplace</h1>
-        <p class="tagline">Buy and sell used items with fellow CUT students</p>
-        
-        <div class="search-section">
-            <input type="text" id="searchInput" placeholder="Search products...">
-            <select id="categoryFilter">
-                <option value="">All Categories</option>
-                <option value="textbook">Textbooks</option>
-                <option value="furniture">Furniture</option>
-                <option value="electronics">Electronics</option>
-                <option value="other">Other</option>
-            </select>
+        <h1>Your Inbox</h1>
+        <div id="conversationsList"></div>
+    </div>
+    <div id="chatModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeChat()">&times;</span>
+            <h3 id="chatProductTitle"></h3>
+            <div id="chatMessages" class="chat-messages"></div>
+            <textarea id="chatMessageInput" placeholder="Type your message..."></textarea>
+            <button onclick="sendMessage()">Send</button>
         </div>
-
-        <div class="product-grid" id="productGrid"></div>
     </div>
     <script src="config.js"></script>
     <script src="script.js"></script>
