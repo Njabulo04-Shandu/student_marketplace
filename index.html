@@ -1,44 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Marketplace | CUT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <nav>
-        <div class="logo">
-            <span class="cut">C.U.T.</span>
-            <span class="marketplace">Student Marketplace</span>
-        </div>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="dashboard.html">Sell</a>
-            <a href="inbox.html">Inbox</a>
-            <a href="#" id="authLink">Login</a>
-        </div>
-    </nav>
-    <div class="container">
-        <h1>Welcome to the Student Marketplace</h1>
-        <p class="tagline">Buy and sell used items with fellow CUT students</p>
-        
-        <div class="search-section">
-            <input type="text" id="searchInput" placeholder="Search products...">
-            <select id="categoryFilter">
-                <option value="">All Categories</option>
-                <option value="textbook">Textbooks</option>
-                <option value="furniture">Furniture</option>
-                <option value="electronics">Electronics</option>
-                <option value="other">Other</option>
-            </select>
-        </div>
-
-        <div class="product-grid" id="productGrid"></div>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config.js"></script>
+    <style>
+        .category-scroll {
+            overflow-x: auto;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        .category-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .product-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        /* Fix for inline layout: search bar fixed width, chips wrap but stay inline */
+        .search-category-row {
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 1rem;
+        }
+        .search-wrapper {
+            flex-shrink: 0;
+            width: 260px;
+        }
+        .category-scroll {
+            flex: 1;
+            min-width: 0;
+        }
+        @media (max-width: 640px) {
+            .search-category-row {
+                flex-wrap: wrap;
+            }
+            .search-wrapper {
+                width: 100%;
+            }
+            .category-scroll {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header (unchanged) -->
+    <header class="sticky top-0 z-50 bg-gradient-to-r from-[#003261] to-[#002244] shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2">
+                <span class="text-white font-bold text-xl tracking-tight">C<span class="text-[#ffcd00]">.</span>U<span class="text-[#ffcd00]">.</span>T<span class="text-[#ffcd00]">.</span></span>
+                <span class="text-white/80 text-sm hidden sm:block">Student Marketplace</span>
+            </a>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="index.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10">Home</a>
+                <a href="dashboard.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10">Sell</a>
+                <a href="inbox.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10">Inbox</a>
+                <a href="#" id="authLink" class="ml-3 h-9 w-9 rounded-full bg-[#c8102e] flex items-center justify-center text-white font-semibold text-sm hover:bg-[#a00d24] transition-colors">?</a>
+            </div>
+            <button id="hamburger" class="md:hidden text-white p-2 text-2xl">☰</button>
+        </div>
+        <!-- Mobile menu (same as before) -->
+        <div id="mobileMenu" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm md:hidden">
+            <div class="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl p-6 flex flex-col">
+                <button id="closeMenu" class="self-end text-gray-500 text-2xl">✕</button>
+                <div class="flex items-center gap-3 mb-8 pb-6 border-b">
+                    <div id="mobileAvatar" class="h-12 w-12 rounded-full bg-[#c8102e] flex items-center justify-center text-white font-bold text-lg">?</div>
+                    <div><p id="mobileUserName" class="font-semibold text-gray-800">Student</p><p id="mobileUserEmail" class="text-xs text-gray-500"></p></div>
+                </div>
+                <nav class="flex flex-col gap-1">
+                    <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">🏠 Home</a>
+                    <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">📦 Sell</a>
+                    <a href="inbox.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">💬 Inbox</a>
+                    <a href="profile.html" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">👤 Profile</a>
+                    <a href="#" id="mobileAdminLink" class="hidden flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100">🛡️ Admin</a>
+                </nav>
+                <div class="mt-auto pt-6 border-t">
+                    <button id="mobileLogout" class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 w-full">🚪 Sign Out</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="max-w-4xl mx-auto px-4 mt-8">
+        <div class="bg-gradient-to-r from-[#003261] to-[#002244] rounded-2xl p-8 md:p-12 text-center text-white shadow-xl">
+            <h1 class="text-3xl md:text-4xl font-bold">Welcome to <span class="text-[#ffcd00]">C.U.T.</span><br>Student Marketplace</h1>
+            <p class="text-white/80 mt-4 text-sm md:text-base">Buy and sell textbooks, electronics, furniture and more — exclusively for CUT students.</p>
+            <button id="shopNowBtn" class="mt-6 bg-[#c8102e] hover:bg-[#a00d24] text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg">Shop Now</button>
+        </div>
+    </div>
+
+    <!-- Products section: search bar (fixed width) + chips inline -->
+    <main class="max-w-7xl mx-auto px-4 py-10">
+        <div class="search-category-row">
+            <div class="search-wrapper">
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="Search products..." class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#003261]">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+                </div>
+            </div>
+            <div class="category-scroll flex gap-2 overflow-x-auto pb-1">
+                <button data-category="All" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-[#003261] text-white whitespace-nowrap">All</button>
+                <button data-category="Textbooks" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Textbooks</button>
+                <button data-category="Electronics" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Electronics</button>
+                <button data-category="Furniture" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Furniture</button>
+                <button data-category="Clothing" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Clothing</button>
+                <button data-category="Stationery" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Stationery</button>
+                <button data-category="Other" class="category-chip px-4 py-2 rounded-full text-sm font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 whitespace-nowrap">Other</button>
+            </div>
+        </div>
+        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mt-8"></div>
+    </main>
+
+    <script>window.initSupabase();</script>
     <script src="script.js"></script>
 </body>
 </html>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

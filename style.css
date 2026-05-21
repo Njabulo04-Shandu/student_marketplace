@@ -1,255 +1,48 @@
-/* CUT colors: Blue #003399, Red #c8102e, Yellow #ffcd00, White #ffffff */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
-    background: #f0f2f5;
-    color: #1e2a3a;
+/* custom.css – extra styles beyond Tailwind */
+.category-scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
 }
-.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-
-/* Navigation */
-nav {
-    background: #003399; /* CUT Blue */
-    padding: 16px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    border-bottom: 4px solid #c8102e; /* Red line */
+.category-scroll::-webkit-scrollbar {
+    height: 4px;
 }
-.logo {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
+.category-scroll::-webkit-scrollbar-track {
+    background: #e2e8f0;
+    border-radius: 10px;
 }
-.logo .cut {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #ffcd00; /* Yellow */
-    letter-spacing: 2px;
+.category-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
 }
-.logo .marketplace {
-    font-size: 1.2rem;
-    color: white;
-    font-weight: normal;
-}
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    margin-left: 25px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background 0.2s;
-}
-.nav-links a:hover {
-    background: #c8102e;
+.category-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }
 
-/* Product grid - responsive */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 25px;
-    margin-top: 30px;
-}
-@media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(4,1fr); } }
-@media (max-width: 900px) { .product-grid { grid-template-columns: repeat(3,1fr); } }
-@media (max-width: 600px) { .product-grid { grid-template-columns: repeat(2,1fr); } }
-
+/* Product card hover effect */
 .product-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
-    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
-.product-card:hover { transform: translateY(-4px); }
-.product-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    background: #eee;
-}
-.product-card h3 {
-    font-size: 1.1rem;
-    margin: 12px 12px 4px;
-}
-.product-card .price {
-    font-weight: bold;
-    color: #c8102e; /* Red price */
-    margin: 0 12px 12px;
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
 }
 
-/* Forms & inputs */
-input, textarea, select, button {
-    padding: 10px 16px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    font-family: inherit;
-}
-button {
-    background: #003399;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-button:hover { background: #c8102e; }
-
-.card {
-    background: white;
-    border-radius: 24px;
-    padding: 25px;
-    margin: 25px 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+/* Modal backdrop blur */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
 }
 
-/* Search section */
-.search-section {
-    display: flex;
-    gap: 15px;
-    margin: 20px 0;
-    flex-wrap: wrap;
-}
-.search-section input, .search-section select {
-    flex: 1;
-    min-width: 150px;
+/* Custom focus ring (override Tailwind) */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    ring: 2px solid #003261;
 }
 
-/* Empty state */
-.empty-message {
-    text-align: center;
-    padding: 60px 20px;
-    background: white;
-    border-radius: 24px;
-    color: #666;
-    font-size: 1.2rem;
+/* Admin stats cards */
+.stat-card {
+    transition: all 0.2s;
 }
-
-/* Chat modal */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-.modal-content {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 24px;
-    padding: 20px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-.close {
-    float: right;
-    font-size: 28px;
-    cursor: pointer;
-}
-.chat-messages {
-    height: 300px;
-    overflow-y: auto;
-    border: 1px solid #eee;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 12px;
-}
-.message {
-    margin: 8px;
-    padding: 8px 12px;
-    border-radius: 20px;
-    max-width: 80%;
-}
-.message.sent {
-    background: #003399;
-    color: white;
-    text-align: right;
-    margin-left: auto;
-}
-.message.received {
-    background: #f0f2f5;
-    text-align: left;
-}
-
-/* Auth page */
-.auth-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: #f0f2f5;
-}
-.auth-box {
-    background: white;
-    padding: 30px;
-    border-radius: 28px;
-    width: 100%;
-    max-width: 400px;
-    border-top: 6px solid #c8102e;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.auth-tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-.auth-tabs button {
-    flex: 1;
-    background: none;
-    color: #003399;
-    border-bottom: 2px solid transparent;
-    border-radius: 0;
-    padding: 8px;
-}
-.auth-tabs button.active {
-    border-bottom-color: #c8102e;
-    color: #c8102e;
-}
-.auth-box input {
-    width: 100%;
-    margin: 8px 0;
-}
-.auth-box button {
-    width: 100%;
-    margin-top: 15px;
-}
-
-/* Seller dashboard - my products list */
-#myProductsList .admin-product-item {
-    background: white;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    border: 1px solid #eee;
-}
-#myProductsList button {
-    margin-left: 10px;
-}
-
-/* Admin panel specific */
-.admin-product-item {
-    background: white;
-    margin: 10px 0;
-    padding: 15px;
-    border-radius: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
+.stat-card:hover {
+    transform: translateY(-2px);
 }
